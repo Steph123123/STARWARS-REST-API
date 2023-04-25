@@ -41,8 +41,7 @@ class Characters(db.Model):
             "height": self.height,
             "mass": self.mass,
             "hair_color": self.hair_color,
-            "skin_color": self.skin_color,
-            "fav": list(map(lambda fav: fav.serialize(),self.fav)),
+            "skin_color": self.skin_color,        
 
             # do not serialize the password, its a security breach
         }
