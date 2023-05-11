@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Characters
+from models import db, User, Characters, Planets, Vehicles, Favorites
 #from models import Person
 
 app = Flask(__name__)
@@ -50,6 +50,50 @@ def get_all_people():
 
     return jsonify({"people": allcharacter}), 200
 
+@app.route('/people/<int:people_id>', methods=['GET'])
+def get_one_people(people_id):
+    people = Characters.query.get(people_id)
+    character_serialize = people.serialize()
+
+    return jsonify({"people": character_serialize}), 200
+
+
+@app.route('/planet', methods=['GET'])
+def get_all_planet():
+    planet = Planets.query.all()
+    allplanets = list(map(lambda planet: planet.serialize(),planet))
+
+    return jsonify({"planet": allplanets}), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_one_planet(planet_id):
+    planet = Planets.query.get(planet_id)
+    planet_serialize = planet.serialize()
+
+    return jsonify({"planet": planet_serialize}), 200
+
+
+
+@app.route('/vehicles', methods=['GET'])
+def get_all_vehicles():
+    vehicles = Vehicles.query.all()
+    allvehicles = list(map(lambda vehicles: vehicles.serialize(),vehicles))
+
+    return jsonify({"vehicles": allvehicles}), 200
+
+@app.route('/vehicles/<int:vehicles_id>', methods=['GET'])
+def get_one_vehicles(vehicles_id):
+    vehicles = Vehicles.query.get(vehicles_id)
+    vehicles_serialize = vehicles.serialize()
+
+    return jsonify({"vehicles": vehicles_serialize}), 200
+
+@app.route('/users/favorites/<int:user_id>', methods=['GET'])
+def get_favorites(user_id):
+    favs = Favorites.query.filter_by(user_id = user_id)
+    fav_serialize = list(map(lambda favs: favs.serialize(),favs))
+
+    return jsonify({"fav": fav_serialize}), 200
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
