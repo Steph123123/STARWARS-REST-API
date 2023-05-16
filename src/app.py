@@ -94,6 +94,74 @@ def get_favorites(user_id):
     fav_serialize = list(map(lambda favs: favs.serialize(),favs))
 
     return jsonify({"fav": fav_serialize}), 200
+
+@app.route('/favorite/planet/<int:user_id>/<int:planet_id>', methods=['POST'])
+def add_favorite_planet(user_id, planet_id):
+    fav = Favorites.query.filter_by(user_id = user_id, planet_id = planet_id).first()
+    print(fav)
+    if not fav:
+        new_fav = Favorites(user_id = user_id, planet_id=planet_id)
+        db.session.add(new_fav)
+        db.session.commit()
+        return jsonify({"fav": new_fav.serialize()}), 200
+    else:
+        return jsonify({"msj": "ERROR"}), 200
+
+@app.route('/favorite/vehicle/<int:user_id>/<int:vehicle_id>', methods=['POST'])
+def add_favorites_vehicle(user_id, vehicle_id):
+    fav = Favorites.query.filter_by(user_id = user_id, vehicle_id = vehicle_id).first()
+    print(fav)
+    if not fav:
+        new_fav = Favorites(user_id = user_id, vehicle_id=vehicle_id)
+        db.session.add(new_fav)
+        db.session.commit()
+        return jsonify({"fav": new_fav.serialize()}), 200
+    else:
+        return jsonify({"msj": "ERROR"}), 200
+
+@app.route('/favorite/character/<int:user_id>/<int:character_id>', methods=['POST'])
+def add_favorites_character(user_id, character_id):
+    fav = Favorites.query.filter_by(user_id = user_id, character_id = character_id).first()
+    print(fav)
+    if not fav:
+        new_fav = Favorites(user_id = user_id, character_id=character_id)
+        db.session.add(new_fav)
+        db.session.commit()
+        return jsonify({"fav": new_fav.serialize()}), 200
+    else:
+        return jsonify({"msj": "ERROR"}), 200
+@app.route('/favorite/character/<int:user_id>/<int:character_id>', methods=['DELETE'])
+def delete_favorites_character(user_id, character_id):
+    fav = Favorites.query.filter_by(user_id = user_id, character_id = character_id).first()
+    print(fav)
+    if fav:
+        db.session.delete(fav)
+        db.session.commit()
+        return jsonify({"msj": "OK!"}), 200
+    else:
+        return jsonify({"msj": "ERROR"}), 200
+    
+@app.route('/favorite/planet/<int:user_id>/<int:planet_id>', methods=['DELETE'])
+def delete_favorite_planet(user_id, planet_id):
+    fav = Favorites.query.filter_by(user_id = user_id, planet_id = planet_id).first()
+
+    if fav:
+        db.session.delete(fav)
+        db.session.commit()
+        return jsonify({"msj": "OK!"}), 200
+    else:
+        return jsonify({"msj": "ERROR"}), 200
+
+@app.route('/favorite/vehicle/<int:user_id>/<int:vehicle_id>', methods=['DELETE'])
+def delete_favorites_vehicle(user_id, vehicle_id):
+    fav = Favorites.query.filter_by(user_id = user_id, vehicle_id = vehicle_id).first()
+
+    if fav:
+        db.session.delete(fav)
+        db.session.commit()
+        return jsonify({"msj": "OK!"}), 200
+    else:
+        return jsonify({"msj": "ERROR"}), 200
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

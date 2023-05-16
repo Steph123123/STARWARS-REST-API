@@ -30,7 +30,6 @@ class Characters(db.Model):
     mass = db.Column(db.String(80), unique=False, nullable=False)
     hair_color = db.Column(db.String(80), unique=False, nullable=False)
     skin_color = db.Column(db.String(80), unique=False, nullable=False)
-    fav_id = db.Column(db.Integer, db.ForeignKey('favorites.id'))
 
 
 
@@ -45,7 +44,6 @@ class Characters(db.Model):
             "mass": self.mass,
             "hair_color": self.hair_color,
             "skin_color": self.skin_color,
-            "fav_id": self.fav_id        
 
             # do not serialize the password, its a security breach
         }
@@ -57,7 +55,6 @@ class Planets(db.Model):
     orbital_period = db.Column(db.String(80), unique=False, nullable=False)
     diameter = db.Column(db.String(80), unique=False, nullable=False)
     climate = db.Column(db.String(80), unique=False, nullable=False)
-    fav_id = db.Column(db.Integer, db.ForeignKey('favorites.id'))
 
 
 
@@ -73,7 +70,6 @@ class Planets(db.Model):
             "orbital_period": self.orbital_period,
             "diameter": self.diameter,
             "climate": self.climate,
-            "fav_id": self.fav_id        
 
 
 
@@ -87,7 +83,6 @@ class Vehicles(db.Model):
     manufacturer = db.Column(db.String(80), unique=False, nullable=False)
     cost_in_credits = db.Column(db.String(80), unique=False, nullable=False)
     length = db.Column(db.String(80), unique=False, nullable=False)
-    fav_id = db.Column(db.Integer, db.ForeignKey('favorites.id'))
 
 
 
@@ -103,7 +98,6 @@ class Vehicles(db.Model):
             "manufacturer": self.manufacturer,
             "cost_in_credits": self.cost_in_credits,
             "length": self.length,
-            "fav_id": self.fav_id        
 
 
             # do not serialize the password, its a security breach
@@ -112,18 +106,19 @@ class Vehicles(db.Model):
 class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    character = db.relationship('Characters', backref='favorites', lazy=True)
-    vehicles = db.relationship('Vehicles', backref='favorites', lazy=True)
-    planets = db.relationship('Planets', backref='favorites', lazy=True)
+    character_id = db.Column(db.Integer, db.ForeignKey('characters.id'))
+    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicles.id'))
+    planet_id = db.Column(db.Integer, db.ForeignKey('planets.id'))
+
 
 
 
     def serialize(self):
         return {
             "id": self.id,
-            "character": list(map(lambda character: character.serialize(),self.character)),
-            "vehicles_id":list(map(lambda vehicles: vehicles.serialize(),self.vehicles)),
-            "planets_id": list(map(lambda planets: planets.serialize(),self.planets)),
+            "character_id": self.character_id,
+            "vehicles_id":self.vehicle_id,
+            "planets_id":self.planet_id,
             "user": self.user_id,
             # do not serialize the password, its a security breach
         }
